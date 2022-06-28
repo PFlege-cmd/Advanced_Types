@@ -8,69 +8,101 @@ type Employee = {
   startDate: Date;
 };
 
-// interface ElevatedEmployee extends Employee, Admin {}
-
-type ElevatedEmployee = Admin & Employee;
-
-const e1: ElevatedEmployee = {
-  name: 'Max',
-  privileges: ['create-server'],
-  startDate: new Date()
-};
-
-type Combinable = string | number;
-type Numeric = number | boolean;
-
-type Universal = Combinable & Numeric;
-
-function add(a: Combinable, b: Combinable) {
-  if (typeof a === 'string' || typeof b === 'string') {
-    return a.toString() + b.toString();
-  }
-  return a + b;
-}
-
-type UnknownEmployee = Employee | Admin;
-
-function printEmployeeInformation(emp: UnknownEmployee) {
-  console.log('Name: ' + emp.name);
-  if ('privileges' in emp) {
-    console.log('Privileges: ' + emp.privileges);
-  }
-  if ('startDate' in emp) {
-    console.log('Start Date: ' + emp.startDate);
-  }
-}
-
-printEmployeeInformation({ name: 'Manu', startDate: new Date() });
-
 class Car {
-  drive() {
-    console.log('Driving...');
+  drive(): void {
+    console.log('drive car');
   }
 }
 
 class Truck {
-  drive() {
-    console.log('Driving a truck...');
+  drive(): void {
+    console.log('drive truck');
   }
 
-  loadCargo(amount: number) {
-    console.log('Loading cargo ...' + amount);
+  loadCargo(weight: number) {
+    console.log(`weight is: ${weight}`);
   }
 }
+
+interface Japanese {
+  type: 'Japanese';
+  kanji: string;
+}
+
+interface German {
+  type: 'German';
+  alphabet: 'Roman' | 'Kyrillic';
+}
+
+// interface ElevatedEmployee extends Employee, Admin {}
+
+// Demonstrate intersection-types -  for primitives and classes
+type ElevatedEmployee = Admin & Employee;
+
+let e1: ElevatedEmployee = {
+  name: 'Pat',
+  privileges: ['I have no privilege'],
+  startDate: new Date()
+};
+
+console.log(e1);
+
+type Codeable = number | string;
+type Binary = number | boolean;
+
+type Numberic = Codeable & Binary;
+
+let numeric: Numberic = 1;
+
+console.log(typeof numeric);
+
+// Demonstrate tape-safeguarding
 
 type Vehicle = Car | Truck;
 
-const v1 = new Car();
-const v2 = new Truck();
+let v1: Vehicle = new Truck();
+let v2: Car = new Car();
 
-function useVehicle(vehicle: Vehicle) {
-  vehicle.drive();
-  if (vehicle instanceof Truck) {
-    vehicle.loadCargo(1000);
+function printCargo(v: Vehicle){
+  if ('loadCargo' in v){
+    v.loadCargo(1000);
+  } else {
+    console.log('Vehicle ain\'t no truck');
   }
 }
 
-useVehicle(v1);
-useVehicle(v2);
+printCargo(v1);
+printCargo(v2);
+
+// demonstrate  discriminating unions
+
+type Language = Japanese | German;
+
+let german: Language = {
+  type: 'German',
+  alphabet: 'Roman'
+}
+
+let japanese: Language = {
+  type: 'Japanese',
+  kanji: '漢字'
+}
+
+let discriminateUnion : (l:Language) => void = function(l){
+  if (l.type === 'German'){
+    console.log(l.alphabet);
+  } else {
+    console.log(l.kanji);
+  }
+}
+
+discriminateUnion(japanese);
+discriminateUnion(german);
+
+// demonstrate type-casting:
+
+let inputElement: HTMLElement = document.getElementById('1')!
+let paragraphElement: HTMLParagraphElement = document.getElementById('p1') as HTMLParagraphElement;
+console.log(paragraphElement.innerText);
+
+
