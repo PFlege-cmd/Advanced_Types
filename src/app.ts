@@ -34,6 +34,11 @@ interface German {
   alphabet: 'Roman' | 'Kyrillic';
 }
 
+interface ErrorContainer {
+  id: string;
+  [prop: string]: string;
+}
+
 // interface ElevatedEmployee extends Employee, Admin {}
 
 // Demonstrate intersection-types -  for primitives and classes
@@ -61,18 +66,24 @@ console.log(typeof numeric);
 type Vehicle = Car | Truck;
 
 let v1: Vehicle = new Truck();
-let v2: Car = new Car();
+let v2: Vehicle = new Car();
+let vTruck: Truck = new Truck();
 
-function printCargo(v: Vehicle){
+// demonstrate function overloading
+
+function printCargo(v: Truck, weight: number): void;
+function printCargo(v: Car, weight: number): void;
+function printCargo(v: Vehicle, weight: number){
   if ('loadCargo' in v){
-    v.loadCargo(1000);
+    v.loadCargo(weight);
   } else {
     console.log('Vehicle ain\'t no truck');
   }
 }
 
-printCargo(v1);
-printCargo(v2);
+printCargo(v1, 10);
+printCargo(v2, 100);
+printCargo(vTruck, 1000);
 
 // demonstrate  discriminating unions
 
@@ -104,5 +115,54 @@ discriminateUnion(german);
 let inputElement: HTMLElement = document.getElementById('1')!
 let paragraphElement: HTMLParagraphElement = document.getElementById('p1') as HTMLParagraphElement;
 console.log(paragraphElement.innerText);
+
+// demonstrate indexed parameters
+
+let emailContainer: ErrorContainer = {
+  id: '123',
+  email: 'Incorrect email',
+  inputField: 'incorrect input added'
+}
+
+let nameContainer: ErrorContainer = {
+  id : '321',
+  nameField: 'Name does contain invalid characters'
+}
+
+
+
+type deepStructure = {
+  level: number,
+  nested: {
+    level: number
+  } | undefined
+}
+
+let deepStructureUndefined: deepStructure = {
+  level: 1,
+  nested: undefined
+}
+
+let deepStructureDefined: deepStructure = {
+  level: 1,
+  nested: {
+    level: 2
+  }
+}
+
+// demonstrate optional chaining
+
+console.log(nameContainer?.email);
+console.log(deepStructureUndefined?.nested?.level);
+console.log(deepStructureDefined?.nested?.level);
+
+let nullish = 0??undefined;
+
+if (true){
+  console.log(nullish)
+}
+
+//console.log(null??0);
+
 
 
