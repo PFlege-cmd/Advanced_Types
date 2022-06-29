@@ -164,5 +164,19 @@ if (true){
 
 //console.log(null??0);
 
+// let test = {
+//   myName: 'Max'
+// };
+//
+// let test2 = {
+//   myName: 'Max'
+// }
 
+let test = 'NY';
+let test2 = 'NY';
+
+
+let testing = test === test2;
+
+console.log(`Zijn objecten gelijk? ${testing}`);
 
